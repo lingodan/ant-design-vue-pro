@@ -126,7 +126,10 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  NProgress.start();
+  // 配置只有当跳转前后的路径不同时，才会有NProgress效果
+  if (to.path != from.path) {
+    NProgress.start();
+  }
   next();
 });
 
