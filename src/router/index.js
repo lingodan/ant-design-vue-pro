@@ -1,23 +1,121 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
+// import RenderRouterView from "../components/RenderRouterView"
+import NotFound from "../views/404.vue";
+//加载动画 Nprogress
+import NProgress from "nprogress";
+import "nprogress/nprogress.css";
+
+//vuex 提供路由守卫
 
 Vue.use(VueRouter);
 
 const routes = [
   {
-    path: "/",
-    name: "Home",
-    component: Home
+    path: "/user",
+    // component:RenderRouterView,
+    // 使用render函数来渲染路由设计
+    // component: {render: h => h("router-view")},
+    // 使用异步加载，箭头函数
+    component: () =>
+      import(/* webpackChunkName: "layout" */ "../layouts/UserLayout"),
+    children: [
+      {
+        path: "/user",
+        redirect: "/user/login"
+      },
+      {
+        path: "/user/login",
+        name: "login",
+        component: () =>
+          import(/* webpackChunkName: "user" */ "../views/user/Login")
+      },
+      {
+        path: "/user/register",
+        name: "register",
+        component: () =>
+          import(/* webpackChunkName: "user" */ "../views/user/Register")
+      }
+    ]
   },
   {
-    path: "/about",
-    name: "About",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
+    path: "/",
     component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue")
+      import(/* webpackChunkName: "layout" */ "../layouts/BasicLayout"),
+    children: [
+      {
+        path: "/",
+        redirect: "/dashboard/analysis"
+      },
+      {
+        path: "/dashboard",
+        name: "dashboard",
+        component: { render: h => h("router-view") },
+        children: [
+          {
+            path: "/dashboard/analysis",
+            name: "analysis",
+            component: () =>
+              import(
+                /* webpackChunkName: "dashboard" */ "../views/dashboard/Analysis"
+              )
+          }
+        ]
+      },
+      {
+        path: "/form",
+        name: "form",
+        component: { render: h => h("router-view") },
+        children: [
+          {
+            path: "/form/basic-form",
+            name: "basicForm",
+            component: () =>
+              import(/* webpackChunkName: "form" */ "../views/forms/BasicForm")
+          },
+          {
+            path: "/form/step-form",
+            name: "stepform",
+            component: () =>
+              import(/* webpackChunkName: "form" */ "../views/forms/stepForm"),
+            children: [
+              {
+                path: "/form/step-form",
+                redirect: "/form/step-form/info"
+              },
+              {
+                path: "/form/setp-form/info",
+                name: "info",
+                component: () =>
+                  import(
+                    /* webpackChunkName: "form" */ "../views/forms/stepForm/Step1"
+                  )
+              },
+              {
+                path: "/form/setp-form/confirm",
+                name: "confirm",
+                component: () =>
+                  import(
+                    /* webpackChunkName: "form" */ "../views/forms/stepForm/Step2"
+                  )
+              },
+              {
+                path: "/form/setp-form/info",
+                name: "result",
+                component: () =>
+                  import(
+                    /* webpackChunkName: "form" */ "../views/forms/stepForm/Step3"
+                  )
+              }
+            ]
+          }
+        ]
+      },
+      {
+        path: "*",
+        component: NotFound
+      }
+    ]
   }
 ];
 
@@ -25,6 +123,15 @@ const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
   routes
+});
+
+router.beforeEach((to, from, next) => {
+  NProgress.start();
+  next();
+});
+
+router.afterEach(() => {
+  NProgress.done();
 });
 
 export default router;
