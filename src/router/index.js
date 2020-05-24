@@ -13,6 +13,9 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/user",
+    // 设置标志位，然后在过滤生成菜单时处理
+    // 约定按照是否存在name属性来确定，是否配置在Menu中
+    hideInMenu: true,
     // component:RenderRouterView,
     // 使用render函数来渲染路由设计
     // component: {render: h => h("router-view")},
@@ -50,11 +53,13 @@ const routes = [
       {
         path: "/dashboard",
         name: "dashboard",
+        meta: { icon: "dashboard", title: "仪表盘" },
         component: { render: h => h("router-view") },
         children: [
           {
             path: "/dashboard/analysis",
             name: "analysis",
+            meta: { title: "分析页" },
             component: () =>
               import(
                 /* webpackChunkName: "dashboard" */ "../views/dashboard/Analysis"
@@ -65,17 +70,21 @@ const routes = [
       {
         path: "/form",
         name: "form",
+        meta: { icon: "form", title: "表单" },
         component: { render: h => h("router-view") },
         children: [
           {
             path: "/form/basic-form",
             name: "basicForm",
+            meta: { title: "基础表单" },
             component: () =>
               import(/* webpackChunkName: "form" */ "../views/forms/BasicForm")
           },
           {
             path: "/form/step-form",
             name: "stepform",
+            meta: { title: "分步表单" },
+            hideChildrenInMenu: true,
             component: () =>
               import(/* webpackChunkName: "form" */ "../views/forms/stepForm"),
             children: [
@@ -84,7 +93,7 @@ const routes = [
                 redirect: "/form/step-form/info"
               },
               {
-                path: "/form/setp-form/info",
+                path: "/form/step-form/info",
                 name: "info",
                 component: () =>
                   import(
@@ -113,7 +122,8 @@ const routes = [
       },
       {
         path: "*",
-        component: NotFound
+        component: NotFound,
+        hideInMenu: true
       }
     ]
   }
