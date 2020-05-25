@@ -2,9 +2,15 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 // import RenderRouterView from "../components/RenderRouterView"
 import NotFound from "../views/404.vue";
+import Forbidden from "../views/403.vue";
 //加载动画 Nprogress
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
+
+import findLast from "lodash/findLast";
+import { check, isLogin } from "./../utils/auth";
+
+import { notification } from "ant-design-vue";
 
 //vuex 提供路由守卫
 
@@ -43,6 +49,7 @@ const routes = [
   },
   {
     path: "/",
+    meta: { authority: ["user", "admin"] },
     component: () =>
       import(/* webpackChunkName: "layout" */ "../layouts/BasicLayout"),
     children: [
@@ -70,7 +77,7 @@ const routes = [
       {
         path: "/form",
         name: "form",
-        meta: { icon: "form", title: "表单" },
+        meta: { icon: "form", title: "表单", authority: ["admin"] },
         component: { render: h => h("router-view") },
         children: [
           {
@@ -119,13 +126,20 @@ const routes = [
             ]
           }
         ]
-      },
-      {
-        path: "*",
-        component: NotFound,
-        hideInMenu: true
       }
     ]
+  },
+  {
+    path: "/403",
+    name: "403",
+    component: Forbidden,
+    hideInMenu: true
+  },
+  {
+    path: "*",
+    name: "404",
+    component: NotFound,
+    hideInMenu: true
   }
 ];
 
@@ -139,6 +153,24 @@ router.beforeEach((to, from, next) => {
   // 配置只有当跳转前后的路径不同时，才会有NProgress效果
   if (to.path != from.path) {
     NProgress.start();
+  }
+  // to.matched
+  const record = findLast(to.matched, record => record.meta.authority);
+  if (record && !check(record.meta.authority)) {
+    if (!isLogin() && to.path !== "/user/login") {
+      next({
+        path: "/user/login"
+      });
+    } else if (to.path !== "/403") {
+      notification.error({
+        message: "403",
+        description: "你没有访问权限，请联系管理员"
+      });
+      next({
+        path: "/403"
+      });
+    }
+    NProgress.done();
   }
   next();
 });

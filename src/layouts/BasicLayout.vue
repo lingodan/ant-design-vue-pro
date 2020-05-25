@@ -51,11 +51,9 @@ export default {
   },
   computed: {
     navTheme() {
-      console.log(this.$route.query.navTheme);
       return this.$route.query.navTheme || "dark";
     },
     navLayout() {
-      console.log(this.$route.query.navLayout);
       return this.$route.query.navLayout || "left";
     }
   },
