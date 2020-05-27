@@ -18,3 +18,6 @@
 ````
 1. 根据ant-design-vue的配置引入组件后，然后调整页面布局。
 2. 根据组件路由生成菜单 将router/index.js ==> Menu
+
+
+权限组件/权限指令（v-auth）
