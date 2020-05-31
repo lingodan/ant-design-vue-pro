@@ -21,3 +21,10 @@
 
 
 权限组件/权限指令（v-auth）
+
+### 使用ECharts图标插件
+#### 安装Echarts
+在 webpack 中使用 ECharts ```npm install echarts --save```
+
+#### 组件的延迟加载/监听容器变化
+使用后者方案：安装resize-detector ``` npm i --save resize-detector```
