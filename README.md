@@ -28,3 +28,17 @@
 
 #### 组件的延迟加载/监听容器变化
 使用后者方案：安装resize-detector ``` npm i --save resize-detector```
+
+### Mock测试
+
+使用较多关于node.js的相关知识
+
+1. Vue CLI #devServer.proxy
+2. https://webpack.js.org/configuration/dev-server/#devserverproxy
+
+### AXIOS 与后端联调
+package.json联调，增加配置环境；
+windows环境下，webpack添加cross-env
+
+#### vuejs/JSX
+ 

@@ -4,13 +4,16 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
+    "serve:no-mock": "cross-env MOCK=none vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "ant-design-vue": "latest",
+    "axios": "^0.19.2",
     "core-js": "^3.6.4",
+    "cross-env": "^7.0.2",
     "echarts": "^4.8.0",
     "lodash": "^4.17.15",
     "resize-detector": "^0.2.2",

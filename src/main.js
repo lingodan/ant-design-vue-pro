@@ -13,12 +13,18 @@ import "ant-design-vue/dist/antd.less";
 
 import Authorized from "./components/Authorized";
 import Auth from "./directives/auth";
+import api from "./http/api";
+import http from "./http/http";
+import "./http/axios";
 
 Vue.config.productionTip = false;
 // 将ant-design-vue所有组件全局注入到Vue组件中
 Vue.use(Antd);
 Vue.use(Auth);
 Vue.component("Authorized", Authorized);
+
+Vue.prototype.$api = api;
+Vue.prototype.$http = http;
 
 new Vue({
   router,
